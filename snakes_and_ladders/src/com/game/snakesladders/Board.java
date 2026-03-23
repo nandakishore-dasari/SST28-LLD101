@@ -25,8 +25,8 @@ public class Board {
         }
 
         // Add Ladders
-        int target = numSnakes + numLadders;
-        while (jumpers.size() < target) {
+        int totalTarget = numSnakes + numLadders;
+        while (jumpers.size() < totalTarget) {
             int start = rand.nextInt(maxCell - 2) + 2;
             int end = rand.nextInt(maxCell - start) + (start + 1);
             if (isValidPlacement(start, end)) {
@@ -36,16 +36,18 @@ public class Board {
     }
 
     private boolean isValidPlacement(int start, int end) {
-        if (start >= size * size || jumpers.containsKey(start)) return false;
+        if (start == size * size || end == size * size) return false;
+        if (jumpers.containsKey(start)) return false;
+        
         int startRow = (start - 1) / size;
         int endRow = (end - 1) / size;
-        return Math.abs(startRow - endRow) >= 1; 
+        return Math.abs(startRow - endRow) >= 1; // Vertical Delta Constraint
     }
 
-    public int getNextPosition(int pos) {
-        if (jumpers.containsKey(pos)) {
-            return jumpers.get(pos).getEnd();
+    public int getNextPosition(int currentPos) {
+        if (jumpers.containsKey(currentPos)) {
+            return jumpers.get(currentPos).getEnd();
         }
-        return pos;
+        return currentPos;
     }
 }
